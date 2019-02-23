@@ -64,7 +64,7 @@ class StereoGroup(object):
         """
         frame = self.captures[0].read()[1, 2]
         height, width, colors = frame.shape
-        left_frame = frame[:, width/3, :]
+        left_frame = frame[:, :width/3, :]
         center_frame = frame[:, width/3: 2*width/3, :]
         right_frame = frame[:, 2*width/3:, :]
         return [left_frame, center_frame, right_frame]
