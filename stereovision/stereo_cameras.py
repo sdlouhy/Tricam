@@ -114,7 +114,7 @@ class ChessboardFinder(StereoGroup):
 class CalibratedGroup(StereoGroup):
 
     """
-    A ``StereoPair`` that works with rectified images and produces point clouds.
+    A ``StereoGroup`` that works with rectified images and produces point clouds.
     """
 
     def __init__(self, devices, calibration, block_matcher):
