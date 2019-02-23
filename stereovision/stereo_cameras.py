@@ -41,7 +41,7 @@ class StereoGroup(object):
 
         ``devices`` is an iterable containing the device numbers.
         """
-        #: Video captures associated with the ``StereoPair``
+        #: Video captures associated with the ``StereoGroup``
         self.captures = [cv2.VideoCapture(device) for device in devices]
 
     def __enter__(self):
@@ -128,7 +128,7 @@ class CalibratedGroup(StereoGroup):
         """
         if devices:
             super(CalibratedGroup, self).__init__(devices)
-        #: ``StereoCalibration`` object holding the camera pair's calibration
+        #: ``StereoCalibration`` object holding the camera group's calibration
         self.calibration = calibration
         #: ``BlockMatcher`` object for computing disparity and point cloud
         self.block_matcher = block_matcher

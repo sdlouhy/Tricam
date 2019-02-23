@@ -22,16 +22,20 @@ def main():
     """
     parser = argparse.ArgumentParser(description="Show video from three "
                                      "webcams.\n\nPress 'q' to exit.")
-    parser.add_argument("devices", type=int, nargs=3, help="Device numbers "
+    parser.add_argument("devices1", type=int, nargs=2, help="Device numbers "
                         "for the cameras that should be accessed in order "
-                        " (left, center, right).")
+                        " (left, center).")
+    parser.add_argument("devices2", type=int, nargs=1, help="Device number "
+                                                            "for the right camera ")
     parser.add_argument("--output_folder",
                         help="Folder to write output images to.")
     parser.add_argument("--interval", type=float, default=1,
                         help="Interval (s) to take pictures in.")
     args = parser.parse_args()
 
-    with StereoGroup(args.devices) as group:
+    devices = (args.devices1 + args.devices2)
+
+    with StereoGroup(devices) as group:
         if not args.output_folder:
             group.show_videos()
         else:
