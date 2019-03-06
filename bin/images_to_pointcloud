@@ -31,7 +31,7 @@ def main():
                         help="Path to block matcher's settings.")
     args = parser.parse_args()
 
-    image_pair = [cv2.imread(image) for image in [args.left, args.right]]
+    image_group = [cv2.imread(image) for image in [args.left, args.center, args.right]]
     calib_folder = args.calibration
     if args.use_stereobm:
         block_matcher = StereoBM()
@@ -40,11 +40,11 @@ def main():
     if args.bm_settings:
         block_matcher.load_settings(args.bm_settings)
 
-    camera_pair = CalibratedGroup(None,
-                                 StereoCalibration(input_folder=calib_folder),
-                                 block_matcher)
-    rectified_pair = camera_pair.calibration.rectify(image_pair)
-    points = camera_pair.get_point_cloud(rectified_pair)
+    camera_group = CalibratedGroup(None,
+                                   StereoCalibration(input_folder=calib_folder),
+                                   block_matcher)
+    rectified_group = camera_group.calibration.rectify(image_group)
+    points = camera_group.get_point_cloud(rectified_group)
     points = points.filter_infinity()
     points.write_ply(args.output)
 
