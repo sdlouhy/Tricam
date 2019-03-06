@@ -57,7 +57,7 @@ def main():
                 filename = "{}_{}.ppm".format(side, number_string)
                 output_path = os.path.join(args.output_folder, filename)
                 cv2.imwrite(output_path, frame)
-            progress.update(progress.maxval - (args.num_pictures - i))
+            progress.update(progress.max_value - (args.num_pictures - i))
             for j in range(10):
                 group.show_frames(1)
         progress.finish()
