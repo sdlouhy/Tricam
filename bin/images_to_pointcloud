@@ -10,10 +10,10 @@ Tool for creating and exporting colored point clouds from stereo image pairs.
 import argparse
 
 import cv2
-from stereovision.blockmatchers import StereoBM, StereoSGBM
-from stereovision.calibration import StereoCalibration
-from stereovision.stereo_cameras import CalibratedGroup
-from stereovision.ui_utils import STEREO_BM_FLAG
+from tricam.blockmatchers import StereoBM, StereoSGBM
+from tricam.calibration import StereoCalibration
+from tricam.stereo_cameras import CalibratedGroup
+from tricam.ui_utils import STEREO_BM_FLAG
 
 
 def main():

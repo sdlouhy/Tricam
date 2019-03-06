@@ -3,7 +3,7 @@
 # Code originally licensed under the GNU General Public Use License.
 
 """
-Utilities for easing user interaction with the ``stereovision`` package.
+Utilities for easing user interaction with the ``tricam`` package.
 
 Variables:
 
@@ -29,8 +29,8 @@ import os
 
 import cv2
 from progressbar import ProgressBar, Percentage, Bar
-from stereovision.calibration import StereoCalibrator
-from stereovision.exceptions import BadBlockMatcherArgumentError
+from tricam.calibration import StereoCalibrator
+from tricam.exceptions import BadBlockMatcherArgumentError
 
 #: Command line arguments for collecting information about chessboards
 CHESSBOARD_ARGUMENTS = ArgumentParser(add_help=False)

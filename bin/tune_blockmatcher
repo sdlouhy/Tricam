@@ -18,9 +18,9 @@ from argparse import ArgumentParser
 
 import cv2
 
-from stereovision.blockmatchers import StereoBM, StereoSGBM
-from stereovision.calibration import StereoCalibration
-from stereovision.ui_utils import find_files, BMTuner, STEREO_BM_FLAG
+from tricam.blockmatchers import StereoBM, StereoSGBM
+from tricam.calibration import StereoCalibration
+from tricam.ui_utils import find_files, BMTuner, STEREO_BM_FLAG
 
 
 def main():

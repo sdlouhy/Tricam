@@ -19,16 +19,16 @@ import cv2
 import simplejson
 import numpy as np
 
-from stereovision.exceptions import (InvalidSearchRangeError,
-                                     InvalidWindowSizeError,
-                                     InvalidBMPresetError,
-                                     InvalidNumDisparitiesError,
-                                     InvalidSADWindowSizeError,
-                                     InvalidUniquenessRatioError,
-                                     InvalidSpeckleWindowSizeError,
-                                     InvalidSpeckleRangeError,
-                                     InvalidFirstDisparityChangePenaltyError,
-                                     InvalidSecondDisparityChangePenaltyError)
+from tricam.exceptions import (InvalidSearchRangeError,
+                               InvalidWindowSizeError,
+                               InvalidBMPresetError,
+                               InvalidNumDisparitiesError,
+                               InvalidSADWindowSizeError,
+                               InvalidUniquenessRatioError,
+                               InvalidSpeckleWindowSizeError,
+                               InvalidSpeckleRangeError,
+                               InvalidFirstDisparityChangePenaltyError,
+                               InvalidSecondDisparityChangePenaltyError)
 
 
 class BlockMatcher(object):
