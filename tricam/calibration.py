@@ -253,10 +253,13 @@ class StereoCalibrator(object):
          cerberus.proj_mats["left"], cerberus.proj_mats["center"], cerberus.proj_mats["right"],
          cerberus.disp_to_depth_mat, cerberus.valid_boxes["left"],
          cerberus.valid_boxes["right"]) = cv2.rectify3Collinear(cerberus.cam_mats["left"], cerberus.dist_coefs["left"],
-            cerberus.cam_mats["center"], cerberus.dist_coefs["center"], cerberus.cam_mats["right"],
-            cerberus.dist_coefs["right"], self.image_points["left"], self.image_points["right"],
-            self.image_size, calib12.rot_mat, calib12.trans_vec, calib13.rot_mat,
-            calib13.trans_vec, alpha, self.image_size, flags=0)
+                                                                cerberus.cam_mats["center"],
+                                                                cerberus.dist_coefs["center"],
+                                                                cerberus.cam_mats["right"],
+                                                                cerberus.dist_coefs["right"], self.image_points["left"],
+                                                                self.image_points["right"], self.image_size,
+                                                                calib12.rot_mat, calib12.trans_vec, calib13.rot_mat,
+                                                                calib13.trans_vec, alpha, self.image_size, flags=0)
 
         cerberus.f_mat = cv2.findFundamentalMat(self.image_points["left"], self.image_points["right"])
 
