@@ -56,6 +56,9 @@ def find_files(folder):
     files = [i for i in os.listdir(folder) if i.startswith("left")]
     files.sort()
     for i in range(len(files)):
+        insert_string = "center{}".format(files[i * 2][4:])
+        files.insert(i * 2 + 1, insert_string)
+    for i in range(len(files)):
         insert_string = "right{}".format(files[i * 2][4:])
         files.insert(i * 2 + 1, insert_string)
     files = [os.path.join(folder, filename) for filename in files]
@@ -211,7 +214,7 @@ class BMTuner(object):
         right_column_width = 21
         report.append(header)
         report.append("{}|{}".format("-" * left_column_width,
-                                     "-" * right_column_width))
+                                     "-" * right_column_width,))
         for frequency in frequencies:
             left_column = str(value_frequency[frequency]).center(
                                                              left_column_width)
