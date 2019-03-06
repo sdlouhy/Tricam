@@ -240,36 +240,36 @@ class StereoCalibrator(object):
                                               criteria=criteria,
                                               flags=flags)[1:]
 
-        tricam = StereoCalibration()
+        cerberus = StereoCalibration()
         alpha = 0
-        tricam.cam_mats["left"] = calib12.cam_mats["left"]
-        tricam.dist_coefs["left"] = calib12.dist_coefs["left"]
-        tricam.cam_mats["center"] = calib12.cam_mats["center"]
-        tricam.dist_coefs["center"] = calib12.dist_coefs["center"]
-        tricam.cam_mats["right"] = calib13.cam_mats["right"]
-        tricam.dist_coefs["right"] = calib13.dist_coefs["right"]
+        cerberus.cam_mats["left"] = calib12.cam_mats["left"]
+        cerberus.dist_coefs["left"] = calib12.dist_coefs["left"]
+        cerberus.cam_mats["center"] = calib12.cam_mats["center"]
+        cerberus.dist_coefs["center"] = calib12.dist_coefs["center"]
+        cerberus.cam_mats["right"] = calib13.cam_mats["right"]
+        cerberus.dist_coefs["right"] = calib13.dist_coefs["right"]
 
-        (tricam.rect_trans["left"], tricam.rect_trans["center"], tricam.rect_trans["right"],
-         tricam.proj_mats["left"], tricam.proj_mats["center"], tricam.proj_mats["right"],
-         tricam.disp_to_depth_mat, tricam.valid_boxes["left"], tricam.valid_boxes["right"]) = cv2.rectify3Collinear(
-            tricam.cam_mats["left"], tricam.dist_coefs["left"],
-            tricam.cam_mats["center"], tricam.dist_coefs["center"], tricam.cam_mats["right"],
-            tricam.dist_coefs["right"], self.image_points["left"], self.image_points["right"],
+        (cerberus.rect_trans["left"], cerberus.rect_trans["center"], cerberus.rect_trans["right"],
+         cerberus.proj_mats["left"], cerberus.proj_mats["center"], cerberus.proj_mats["right"],
+         cerberus.disp_to_depth_mat, cerberus.valid_boxes["left"],
+         cerberus.valid_boxes["right"]) = cv2.rectify3Collinear(cerberus.cam_mats["left"], cerberus.dist_coefs["left"],
+            cerberus.cam_mats["center"], cerberus.dist_coefs["center"], cerberus.cam_mats["right"],
+            cerberus.dist_coefs["right"], self.image_points["left"], self.image_points["right"],
             self.image_size, calib12.rot_mat, calib12.trans_vec, calib13.rot_mat,
             calib13.trans_vec, alpha, self.image_size, flags=0)
 
-        tricam.f_mat = cv2.findFundamentalMat(self.image_points["left"], self.image_points["right"])
+        cerberus.f_mat = cv2.findFundamentalMat(self.image_points["left"], self.image_points["right"])
 
         for cam in ("left", "center", "right"):
-                (tricam.undistortion_map[cam],
-                 tricam.rectification_map[cam]) = cv2.initUndistortRectifyMap(
-                    tricam.cam_mats[cam],
-                    tricam.dist_coefs[cam],
-                    tricam.rect_trans[cam],
-                    tricam.proj_mats[cam],
+                (cerberus.undistortion_map[cam],
+                 cerberus.rectification_map[cam]) = cv2.initUndistortRectifyMap(
+                    cerberus.cam_mats[cam],
+                    cerberus.dist_coefs[cam],
+                    cerberus.rect_trans[cam],
+                    cerberus.proj_mats[cam],
                     self.image_size,
                     cv2.CV_32FC1)
-        return tricam
+        return cerberus
 
     def check_calibration(self, calibration):
         """
