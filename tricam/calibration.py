@@ -182,8 +182,7 @@ class StereoCalibrator(object):
         """
         Record chessboard corners found in an image pair.
         The image pair should be an iterable composed of three CvMats ordered
-        (left, right).  Only takes the image points of the outer cameras because the
-        corners in both the left and right side should also be in the center.
+        (left, center, right).
         """
         side = "left"
         self.object_points.append(self.corner_coordinates)
