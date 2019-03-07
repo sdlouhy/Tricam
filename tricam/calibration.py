@@ -192,6 +192,10 @@ class StereoCalibrator(object):
             if show_results:
                 self._show_corners(image, corners)
             self.image_points[side].append(corners.reshape(-1, 2))
+            side = "center"
+            if show_results:
+                self._show_corners(image, corners)
+            self.image_points[side].append(corners.reshape(-1, 2))
             side = "right"
             self.image_count += 1
 
@@ -300,13 +304,19 @@ class StereoCalibrator(object):
         for side in sides:
             for i in range(len(undistorted[side])):
                 total_error += abs(undistorted[this_side][i][0][0] *
-                                   (lines[other_side][i][0][0] +
-                                   lines[second_side][i][0][0]) +
+                                   ((lines[other_side][i][0][0] +
+                                    lines[second_side][i][0][0]) /
+                                    (lines[other_side][i][0][0] *
+                                    lines[second_side][i][0][0])) +
                                    undistorted[this_side][i][0][1] *
-                                   (lines[second_side][i][0][1] +
-                                   lines[other_side][i][0][1]) +
-                                   lines[other_side][i][0][2]) * \
-                                   lines[second_side][i][0][2]
+                                   ((lines[other_side][i][0][1] +
+                                     lines[second_side][i][0][1]) /
+                                    (lines[other_side][i][0][1] *
+                                     lines[second_side][i][0][1])) +
+                                   (((lines[other_side][i][0][2]) +
+                                    lines[second_side][i][0][2]) /
+                                    lines[other_side][i][0][2] *
+                                    lines[second_side][i][0][2]))
             other_side, this_side, second_side = sides
         total_points = self.image_count * len(self.object_points)
         return total_error / total_points
