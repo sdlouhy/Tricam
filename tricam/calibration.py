@@ -282,7 +282,7 @@ class StereoCalibrator(object):
         position of the points detected on the other side for each point and
         return the average error.
         """
-        sides = "left", "center", "right"
+        sides = ("left", "center", "right")
         which_image = {sides[0]: 1, sides[1]: 2, sides[2]: 3}
         undistorted, lines = {}, {}
         for side in sides:
@@ -300,11 +300,11 @@ class StereoCalibrator(object):
         for side in sides:
             for i in range(len(undistorted[side])):
                 total_error += abs(undistorted[this_side][i][0][0] *
-                                   lines[other_side][i][0][0] *
-                                   lines[second_side][i][0][0] +
+                                   (lines[other_side][i][0][0] +
+                                   lines[second_side][i][0][0]) +
                                    undistorted[this_side][i][0][1] *
-                                   lines[second_side][i][0][1] *
-                                   lines[other_side][i][0][1] +
+                                   (lines[second_side][i][0][1] +
+                                   lines[other_side][i][0][1]) +
                                    lines[other_side][i][0][2]) * \
                                    lines[second_side][i][0][2]
             other_side, this_side, second_side = sides
