@@ -4,7 +4,7 @@
 # Code originally licensed under the GNU General Public Use License.
 
 """
-Various exceptions for working with stereovision.
+Various exceptions for working with tricam.
 
 Classes:
 

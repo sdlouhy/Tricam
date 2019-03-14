@@ -18,7 +18,7 @@ Classes:
 
 import cv2
 
-from stereovision.point_cloud import PointCloud
+from tricam.point_cloud import PointCloud
 
 
 class StereoGroup(object):

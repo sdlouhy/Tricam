@@ -12,9 +12,9 @@ import os
 
 import cv2
 from progressbar import ProgressBar, Bar, Percentage
-from stereovision.stereo_cameras import ChessboardFinder
-from stereovision.ui_utils import calibrate_folder, CHESSBOARD_ARGUMENTS
-from stereovision.ui_utils import find_files
+from tricam.stereo_cameras import ChessboardFinder
+from tricam.ui_utils import calibrate_folder, CHESSBOARD_ARGUMENTS
+from tricam.ui_utils import find_files
 
 
 PROGRAM_DESCRIPTION = ("Take a number of pictures with a stereo camera in which a chessboard is "
@@ -57,7 +57,7 @@ def main():
                 filename = "{}_{}.ppm".format(side, number_string)
                 output_path = os.path.join(args.output_folder, filename)
                 cv2.imwrite(output_path, frame)
-            progress.update(progress.maxval - (args.num_pictures - i))
+            progress.update(progress.max_value - (args.num_pictures - i))
             for j in range(10):
                 group.show_frames(1)
         progress.finish()

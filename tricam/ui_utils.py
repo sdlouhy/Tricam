@@ -3,7 +3,7 @@
 # Code originally licensed under the GNU General Public Use License.
 
 """
-Utilities for easing user interaction with the ``stereovision`` package.
+Utilities for easing user interaction with the ``tricam`` package.
 
 Variables:
 
@@ -29,8 +29,8 @@ import os
 
 import cv2
 from progressbar import ProgressBar, Percentage, Bar
-from stereovision.calibration import StereoCalibrator
-from stereovision.exceptions import BadBlockMatcherArgumentError
+from tricam.calibration import StereoCalibrator
+from tricam.exceptions import BadBlockMatcherArgumentError
 
 #: Command line arguments for collecting information about chessboards
 CHESSBOARD_ARGUMENTS = ArgumentParser(add_help=False)
@@ -55,6 +55,9 @@ def find_files(folder):
     """Discover stereo photos and return them as a pairwise sorted list."""
     files = [i for i in os.listdir(folder) if i.startswith("left")]
     files.sort()
+    for i in range(len(files)):
+        insert_string = "center{}".format(files[i * 2][4:])
+        files.insert(i * 2 + 1, insert_string)
     for i in range(len(files)):
         insert_string = "right{}".format(files[i * 2][4:])
         files.insert(i * 2 + 1, insert_string)
@@ -211,7 +214,7 @@ class BMTuner(object):
         right_column_width = 21
         report.append(header)
         report.append("{}|{}".format("-" * left_column_width,
-                                     "-" * right_column_width))
+                                     "-" * right_column_width,))
         for frequency in frequencies:
             left_column = str(value_frequency[frequency]).center(
                                                              left_column_width)

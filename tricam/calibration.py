@@ -15,7 +15,7 @@ import os
 import cv2
 
 import numpy as np
-from stereovision.exceptions import ChessboardNotFoundError
+from tricam.exceptions import ChessboardNotFoundError
 
 
 class StereoCalibration(object):
@@ -192,6 +192,10 @@ class StereoCalibrator(object):
             if show_results:
                 self._show_corners(image, corners)
             self.image_points[side].append(corners.reshape(-1, 2))
+            side = "center"
+            if show_results:
+                self._show_corners(image, corners)
+            self.image_points[side].append(corners.reshape(-1, 2))
             side = "right"
             self.image_count += 1
 
@@ -209,11 +213,11 @@ class StereoCalibrator(object):
          calib13.f_mat) = cv2.stereoCalibrate(self.object_points,
                                               self.image_points["left"],
                                               self.image_points["right"],
-                                              self.image_size,
                                               calib13.cam_mats["left"],
                                               calib13.dist_coefs["left"],
                                               calib13.cam_mats["right"],
                                               calib13.dist_coefs["right"],
+                                              self.image_size,
                                               calib13.rot_mat,
                                               calib13.trans_vec,
                                               calib13.e_mat,
@@ -228,11 +232,11 @@ class StereoCalibrator(object):
          calib12.f_mat) = cv2.stereoCalibrate(self.object_points,
                                               self.image_points["left"],
                                               self.image_points["center"],
-                                              self.image_size,
                                               calib12.cam_mats["left"],
                                               calib12.dist_coefs["left"],
                                               calib12.cam_mats["center"],
                                               calib12.dist_coefs["center"],
+                                              self.image_size,
                                               calib12.rot_mat,
                                               calib12.trans_vec,
                                               calib12.e_mat,
@@ -240,36 +244,39 @@ class StereoCalibrator(object):
                                               criteria=criteria,
                                               flags=flags)[1:]
 
-        tricam = StereoCalibration()
+        cerberus = StereoCalibration()
         alpha = 0
-        tricam.cam_mats["left"] = calib12.cam_mats["left"]
-        tricam.dist_coefs["left"] = calib12.dist_coefs["left"]
-        tricam.cam_mats["center"] = calib12.cam_mats["center"]
-        tricam.dist_coefs["center"] = calib12.dist_coefs["center"]
-        tricam.cam_mats["right"] = calib13.cam_mats["right"]
-        tricam.dist_coefs["right"] = calib13.dist_coefs["right"]
+        cerberus.cam_mats["left"] = calib12.cam_mats["left"]
+        cerberus.dist_coefs["left"] = calib12.dist_coefs["left"]
+        cerberus.cam_mats["center"] = calib12.cam_mats["center"]
+        cerberus.dist_coefs["center"] = calib12.dist_coefs["center"]
+        cerberus.cam_mats["right"] = calib13.cam_mats["right"]
+        cerberus.dist_coefs["right"] = calib13.dist_coefs["right"]
 
-        (tricam.rect_trans["left"], tricam.rect_trans["center"], tricam.rect_trans["right"],
-         tricam.proj_mats["left"], tricam.proj_mats["center"], tricam.proj_mats["right"],
-         tricam.disp_to_depth_mat, tricam.valid_boxes["left"], tricam.valid_boxes["right"]) = cv2.rectify3Collinear(
-            tricam.cam_mats["left"], tricam.dist_coefs["left"],
-            tricam.cam_mats["center"], tricam.dist_coefs["center"], tricam.cam_mats["right"],
-            tricam.dist_coefs["right"], self.image_points["left"], self.image_points["right"],
-            self.image_size, calib12.rot_mat, calib12.trans_vec, calib13.rot_mat,
-            calib13.trans_vec, alpha, self.image_size, flags=0)
+        (cerberus.rect_trans["left"], cerberus.rect_trans["center"], cerberus.rect_trans["right"],
+         cerberus.proj_mats["left"], cerberus.proj_mats["center"], cerberus.proj_mats["right"],
+         cerberus.disp_to_depth_mat, cerberus.valid_boxes["left"],
+         cerberus.valid_boxes["right"]) = cv2.rectify3Collinear(cerberus.cam_mats["left"], cerberus.dist_coefs["left"],
+                                                                cerberus.cam_mats["center"],
+                                                                cerberus.dist_coefs["center"],
+                                                                cerberus.cam_mats["right"],
+                                                                cerberus.dist_coefs["right"], self.image_points["left"],
+                                                                self.image_points["right"], self.image_size,
+                                                                calib12.rot_mat, calib12.trans_vec, calib13.rot_mat,
+                                                                calib13.trans_vec, alpha, self.image_size, flags=0)
 
-        tricam.f_mat = cv2.findFundamentalMat(self.image_points["left"], self.image_points["right"])
+        cerberus.f_mat = cv2.findFundamentalMat(self.image_points["left"], self.image_points["right"])
 
         for cam in ("left", "center", "right"):
-                (tricam.undistortion_map[cam],
-                 tricam.rectification_map[cam]) = cv2.initUndistortRectifyMap(
-                    tricam.cam_mats[cam],
-                    tricam.dist_coefs[cam],
-                    tricam.rect_trans[cam],
-                    tricam.proj_mats[cam],
+                (cerberus.undistortion_map[cam],
+                 cerberus.rectification_map[cam]) = cv2.initUndistortRectifyMap(
+                    cerberus.cam_mats[cam],
+                    cerberus.dist_coefs[cam],
+                    cerberus.rect_trans[cam],
+                    cerberus.proj_mats[cam],
                     self.image_size,
                     cv2.CV_32FC1)
-        return tricam
+        return cerberus
 
     def check_calibration(self, calibration):
         """
@@ -279,7 +286,7 @@ class StereoCalibrator(object):
         position of the points detected on the other side for each point and
         return the average error.
         """
-        sides = "left", "center", "right"
+        sides = ("left", "center", "right")
         which_image = {sides[0]: 1, sides[1]: 2, sides[2]: 3}
         undistorted, lines = {}, {}
         for side in sides:
@@ -297,13 +304,19 @@ class StereoCalibrator(object):
         for side in sides:
             for i in range(len(undistorted[side])):
                 total_error += abs(undistorted[this_side][i][0][0] *
-                                   lines[other_side][i][0][0] *
-                                   lines[second_side][i][0][0] +
+                                   ((lines[other_side][i][0][0] +
+                                    lines[second_side][i][0][0]) /
+                                    (lines[other_side][i][0][0] *
+                                    lines[second_side][i][0][0])) +
                                    undistorted[this_side][i][0][1] *
-                                   lines[second_side][i][0][1] *
-                                   lines[other_side][i][0][1] +
-                                   lines[other_side][i][0][2]) * \
-                                   lines[second_side][i][0][2]
+                                   ((lines[other_side][i][0][1] +
+                                     lines[second_side][i][0][1]) /
+                                    (lines[other_side][i][0][1] *
+                                     lines[second_side][i][0][1])) +
+                                   (((lines[other_side][i][0][2]) +
+                                    lines[second_side][i][0][2]) /
+                                    lines[other_side][i][0][2] *
+                                    lines[second_side][i][0][2]))
             other_side, this_side, second_side = sides
         total_points = self.image_count * len(self.object_points)
         return total_error / total_points

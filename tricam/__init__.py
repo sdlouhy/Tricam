@@ -35,30 +35,30 @@ Import structure:
 Camera interfaces
 *****************
 
-.. automodule:: stereovision.stereo_cameras
+.. automodule:: tricam.stereo_cameras
 
 Camera calibration
 ******************
 
-.. automodule:: stereovision.calibration
+.. automodule:: tricam.calibration
 
 Block matchers
 **************
 
-.. automodule:: stereovision.blockmatchers
+.. automodule:: tricam.blockmatchers
 
 Point clouds
 ************
 
-.. automodule:: stereovision.point_cloud
+.. automodule:: tricam.point_cloud
 
 User interface utilities
 ************************
 
-.. automodule:: stereovision.ui_utils
+.. automodule:: tricam.ui_utils
 
 Exceptions
 **********
 
-.. automodule:: stereovision.exceptions
+.. automodule:: tricam.exceptions
 """
