@@ -26,7 +26,7 @@ class StereoGroup(object):
     """
     A stereo group of cameras.
 
-    This class allows both cameras in a stereo pair to be accessed
+    This class allows all cameras in a stereo group to be accessed
     simultaneously. It also allows the user to show single frames or videos
     captured online with the cameras. It should be instantiated with a context
     manager to ensure that the cameras are freed properly after use.
