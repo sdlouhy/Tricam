@@ -7,10 +7,10 @@ Classes for interacting with stereo cameras.
 
 Classes:
 
-    * ``StereoPair`` - Base class for interacting with stereo cameras
+    * ``StereoGroup`` - Base class for interacting with stereo cameras
 
-        * ``ChessboardFinder`` - Class for finding chessboards with both cameras
-        * ``CalibratedPair`` - Calibrated stereo camera pair that rectifies its
+        * ``ChessboardFinder`` - Class for finding chessboards with all three cameras
+        * ``CalibratedGroup`` - Calibrated stereo camera pair that rectifies its
           images
 
 .. image:: classes_stereo_cameras.svg
@@ -89,7 +89,7 @@ class StereoGroup(object):
 
 class ChessboardFinder(StereoGroup):
 
-    """A ``StereoPair`` that can find chessboards in its images."""
+    """A ``StereoGroup`` that can find chessboards in its images."""
 
     def get_chessboard(self, columns, rows, show=False):
         """
@@ -99,7 +99,7 @@ class ChessboardFinder(StereoGroup):
         chessboard's columns and rows. ``show`` determines whether the frames
         are shown while the cameras search for a chessboard.
         """
-        found_chessboard = [False, False]
+        found_chessboard = [False, False, False]
         while not all(found_chessboard):
             frames = self.get_frames()
             if show:
