@@ -93,7 +93,7 @@ class ChessboardFinder(StereoGroup):
 
     def get_chessboard(self, columns, rows, show=False):
         """
-        Take a picture with a chessboard visible in both captures.
+        Take a picture with a chessboard visible in all three captures.
 
         ``columns`` and ``rows`` should be the number of inside corners in the
         chessboard's columns and rows. ``show`` determines whether the frames
