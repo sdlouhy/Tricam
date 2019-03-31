@@ -2,12 +2,11 @@ from tricam.stereo_cameras import StereoGroup as StereoGroup
 from tricam.stereo_cameras import ChessboardFinder as ChessboardFinder
 from tricam.calibration import StereoCalibration as StereoCalibration
 from tricam.calibration import StereoCalibrator as StereoCalibrator
-# import cv2
+import cv2
 
-devices = [1,2,3]
+devices = [1, 2, 3]
 tricam = StereoGroup(devices)
 # this is for just displaying cameras
-# 5
 # tricam.show_videos()
 
 # calibrator test section
