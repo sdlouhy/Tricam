@@ -136,7 +136,7 @@ class CalibratedGroup(StereoGroup):
     def get_frames(self):
         """Rectify and return current frames from cameras."""
         frames = super(CalibratedGroup, self).get_frames()
-        return self.calibration.rectify(frames)
+        return self.calibrationim.rectify(frames)
 
     def get_point_cloud(self, group):
         """Get 3D point cloud from image pair."""
