@@ -18,7 +18,7 @@ Classes:
 
 import cv2
 
-from tricam.point_cloud import PointCloud
+from point_cloud import PointCloud
 
 
 class StereoGroup(object):
@@ -55,7 +55,7 @@ class StereoGroup(object):
 
     def get_frames(self):
         """Get current frames from cameras."""
-        return [capture.read()[1] for capture in self.captures]
+        return [capture.read() for capture in self.captures]
 
     def get_frames_singleimage(self):
         """
@@ -85,6 +85,15 @@ class StereoGroup(object):
             self.show_frames(1)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        return self.next()
+
+    def next(self):
+        raise StopIteration()
 
 
 class ChessboardFinder(StereoGroup):
