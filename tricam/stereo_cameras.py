@@ -42,7 +42,7 @@ class StereoGroup(object):
         ``devices`` is an iterable containing the device numbers.
         """
         #: Video captures associated with the ``StereoGroup``
-        self.captures = [cv2.VideoCapture(device)[1] for device in devices]
+        self.captures = [cv2.VideoCapture(device) for device in devices]
 
     def __enter__(self):
         return self
