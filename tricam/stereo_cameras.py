@@ -18,7 +18,7 @@ Classes:
 
 import cv2
 
-from point_cloud import PointCloud
+from tricam.point_cloud import PointCloud
 
 
 class StereoGroup(object):
@@ -145,7 +145,7 @@ class CalibratedGroup(StereoGroup):
     def get_frames(self):
         """Rectify and return current frames from cameras."""
         frames = super(CalibratedGroup, self).get_frames()
-        return self.calibrationim.rectify(frames)
+        return self.calibration.rectify(frames)
 
     def get_point_cloud(self, group):
         """Get 3D point cloud from image pair."""

@@ -214,12 +214,12 @@ class StereoSGBM(BlockMatcher):
         self._replace_bm()
 
     @property
-    def numDisparities(self):
+    def num_disparities(self):
         """Return private ``_num_disp`` value."""
         return self._num_disp
 
-    @numDisparities.setter
-    def numDisparities(self, value):
+    @num_disparities.setter
+    def num_disparities(self, value):
         """Set private ``_num_disp`` and reset ``_block_matcher``."""
         if value > 0 and value % 16 == 0:
             self._num_disp = value
