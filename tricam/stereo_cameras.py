@@ -7,10 +7,10 @@ Classes for interacting with stereo cameras.
 
 Classes:
 
-    * ``StereoPair`` - Base class for interacting with stereo cameras
+    * ``StereoGroup`` - Base class for interacting with stereo cameras
 
-        * ``ChessboardFinder`` - Class for finding chessboards with both cameras
-        * ``CalibratedPair`` - Calibrated stereo camera pair that rectifies its
+        * ``ChessboardFinder`` - Class for finding chessboards with all three cameras
+        * ``CalibratedGroup`` - Calibrated stereo camera pair that rectifies its
           images
 
 .. image:: classes_stereo_cameras.svg
@@ -18,7 +18,7 @@ Classes:
 
 import cv2
 
-from tricam.point_cloud import PointCloud
+from point_cloud import PointCloud
 
 
 class StereoGroup(object):
@@ -26,7 +26,7 @@ class StereoGroup(object):
     """
     A stereo group of cameras.
 
-    This class allows both cameras in a stereo pair to be accessed
+    This class allows all cameras in a stereo group to be accessed
     simultaneously. It also allows the user to show single frames or videos
     captured online with the cameras. It should be instantiated with a context
     manager to ensure that the cameras are freed properly after use.
@@ -55,7 +55,7 @@ class StereoGroup(object):
 
     def get_frames(self):
         """Get current frames from cameras."""
-        return [capture.read()[1] for capture in self.captures]
+        return [capture.read() for capture in self.captures]
 
     def get_frames_singleimage(self):
         """
@@ -86,20 +86,29 @@ class StereoGroup(object):
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
 
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        return self.next()
+
+    def next(self):
+        raise StopIteration()
+
 
 class ChessboardFinder(StereoGroup):
 
-    """A ``StereoPair`` that can find chessboards in its images."""
+    """A ``StereoGroup`` that can find chessboards in its images."""
 
     def get_chessboard(self, columns, rows, show=False):
         """
-        Take a picture with a chessboard visible in both captures.
+        Take a picture with a chessboard visible in all three captures.
 
         ``columns`` and ``rows`` should be the number of inside corners in the
         chessboard's columns and rows. ``show`` determines whether the frames
         are shown while the cameras search for a chessboard.
         """
-        found_chessboard = [False, False]
+        found_chessboard = [False, False, False]
         while not all(found_chessboard):
             frames = self.get_frames()
             if show:
@@ -136,7 +145,7 @@ class CalibratedGroup(StereoGroup):
     def get_frames(self):
         """Rectify and return current frames from cameras."""
         frames = super(CalibratedGroup, self).get_frames()
-        return self.calibration.rectify(frames)
+        return self.calibrationim.rectify(frames)
 
     def get_point_cloud(self, group):
         """Get 3D point cloud from image pair."""

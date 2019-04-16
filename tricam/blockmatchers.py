@@ -90,7 +90,7 @@ class BlockMatcher(object):
         """Replace block matcher with new parameters"""
         raise NotImplementedError
 
-    def get_disparity(self, image_pair):
+    def get_disparity(self, image_group):
         """Compute disparity map from image pair."""
         raise NotImplementedError
 
@@ -179,8 +179,8 @@ class StereoBM(BlockMatcher):
         # TODO: match blocks across pairs
         gray = []
         if group[0].ndim == 3:
-            for side in group:
-                gray.append(cv2.cvtColor(side, cv2.COLOR_BGR2GRAY))
+            for cam in group:
+                gray.append(cv2.cvtColor(cam, cv2.COLOR_BGR2GRAY))
         else:
             gray = group
         return self._block_matcher.compute(gray[0], gray[1],
@@ -384,7 +384,7 @@ class StereoSGBM(BlockMatcher):
         self._block_matcher = cv2.StereoSGBM()
         super(StereoSGBM, self).__init__(settings)
 
-    def get_disparity(self, pair):
-        """Compute disparity from image pair (left, right)."""
-        return self._block_matcher.compute(pair[0],
-                                           pair[1]).astype(np.float32) / 16.0
+    def get_disparity(self, group):
+        """Compute disparity from image pair (left, center, right)."""
+        return self._block_matcher.compute(group[0],
+                                           group[2]).astype(np.float32) / 16.0

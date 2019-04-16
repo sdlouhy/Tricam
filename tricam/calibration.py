@@ -15,7 +15,7 @@ import os
 import cv2
 
 import numpy as np
-from tricam.exceptions import ChessboardNotFoundError
+from exceptions import ChessboardNotFoundError
 
 
 class StereoCalibration(object):
