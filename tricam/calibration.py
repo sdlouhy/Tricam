@@ -182,8 +182,7 @@ class StereoCalibrator(object):
         """
         Record chessboard corners found in an image pair.
         The image pair should be an iterable composed of three CvMats ordered
-        (left, right).  Only takes the image points of the outer cameras because the
-        corners in both the left and right side should also be in the center.
+        (left, center, right).
         """
         side = "left"
         self.object_points.append(self.corner_coordinates)
@@ -286,37 +285,54 @@ class StereoCalibrator(object):
         position of the points detected on the other side for each point and
         return the average error.
         """
-        sides = ("left", "center", "right")
-        which_image = {sides[0]: 1, sides[1]: 2, sides[2]: 3}
+        sides1 = ("left", "center")
+        sides2 = ("left", "right")
+
+        which_image = {sides1[0]: 1, sides1[1]: 2}
         undistorted, lines = {}, {}
-        for side in sides:
+        for side in sides1:
             undistorted[side] = cv2.undistortPoints(
-                         np.concatenate(self.image_points[side]).reshape(-1,
-                                                                         1, 2),
-                         calibration.cam_mats[side],
-                         calibration.dist_coefs[side],
-                         P=calibration.cam_mats[side])
+                np.concatenate(self.image_points[side]).reshape(-1,
+                                                                1, 2),
+                calibration.cam_mats[side],
+                calibration.dist_coefs[side],
+                P=calibration.cam_mats[side])
             lines[side] = cv2.computeCorrespondEpilines(undistorted[side],
                                                         which_image[side],
                                                         calibration.f_mat)
-        total_error = 0
-        this_side, second_side, other_side = sides
-        for side in sides:
+        total_error1 = 0
+        this_side, other_side = sides1
+        for side in sides1:
             for i in range(len(undistorted[side])):
-                total_error += abs(undistorted[this_side][i][0][0] *
-                                   ((lines[other_side][i][0][0] +
-                                    lines[second_side][i][0][0]) /
-                                    (lines[other_side][i][0][0] *
-                                    lines[second_side][i][0][0])) +
-                                   undistorted[this_side][i][0][1] *
-                                   ((lines[other_side][i][0][1] +
-                                     lines[second_side][i][0][1]) /
-                                    (lines[other_side][i][0][1] *
-                                     lines[second_side][i][0][1])) +
-                                   (((lines[other_side][i][0][2]) +
-                                    lines[second_side][i][0][2]) /
-                                    lines[other_side][i][0][2] *
-                                    lines[second_side][i][0][2]))
-            other_side, this_side, second_side = sides
-        total_points = self.image_count * len(self.object_points)
-        return total_error / total_points
+                total_error1 += abs(undistorted[this_side][i][0][0] *
+                                    lines[other_side][i][0][0] +
+                                    undistorted[this_side][i][0][1] *
+                                    lines[other_side][i][0][1] +
+                                    lines[other_side][i][0][2])
+            other_side, this_side = sides1
+        total_points1 = self.image_count * len(self.object_points)
+        which_image = {sides1[0]: 1, sides1[1]: 2}
+        undistorted, lines = {}, {}
+
+        for side in sides2:
+            undistorted[side] = cv2.undistortPoints(
+                np.concatenate(self.image_points[side]).reshape(-1,
+                                                                1, 2),
+                calibration.cam_mats[side],
+                calibration.dist_coefs[side],
+                P=calibration.cam_mats[side])
+            lines[side] = cv2.computeCorrespondEpilines(undistorted[side],
+                                                        which_image[side],
+                                                        calibration.f_mat)
+        total_error2 = 0
+        this_side, other_side = sides2
+        for side in sides2:
+            for i in range(len(undistorted[side])):
+                total_error2 += abs(undistorted[this_side][i][0][0] *
+                                    lines[other_side][i][0][0] +
+                                    undistorted[this_side][i][0][1] *
+                                    lines[other_side][i][0][1] +
+                                    lines[other_side][i][0][2])
+            other_side, this_side = sides2
+        total_points2 = self.image_count * len(self.object_points)
+        return total_error1 / total_points1, total_error2 / total_points2

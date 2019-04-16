@@ -99,10 +99,11 @@ def calibrate_folder(args):
     progress.finish()
     print("Calibrating cameras. This can take a while.")
     calibration = calibrator.calibrate_cameras()
-    avg_error = calibrator.check_calibration(calibration)
-    print("The average error between chessboard points and their epipolar "
+    avg_error1, avg_error2 = calibrator.check_calibration(calibration)
+    print("The average error between chessboard points on pair (left, center) and their epipolar "
           "lines is \n"
-          "{} pixels. This should be as small as possible.".format(avg_error))
+          "{} pixels, and the average error on the pair(left, right is {} pixels). "
+          "This should be as small as possible.".format(avg_error1, avg_error2))
     calibration.export(args.output_folder)
 
 
