@@ -1,10 +1,14 @@
+# NOTE: the from tricam.whatever is because of pycharm's weird environment 'features'.  In actual command line code,
+#       this should be whatever file.
+
 from tricam.stereo_cameras import StereoGroup as StereoGroup
 from tricam.stereo_cameras import ChessboardFinder as ChessboardFinder
 from tricam.calibration import StereoCalibration as StereoCalibration
 from tricam.calibration import StereoCalibrator as StereoCalibrator
-import cv2
+import numpy as np
 
-devices = [1, 2, 3]
+
+devices = (1, 2, 3)
 tricam = StereoGroup(devices)
 # this is for just displaying cameras
 # tricam.show_videos()
@@ -18,15 +22,37 @@ rows = 6
 sq_sz = 2.5
 # size of calibrated image in pixels, 640 * 480
 img_sz = 307200
+
 reader = ChessboardFinder(tricam)
-chess_finder = ChessboardFinder.get_chessboard(reader, cols, rows, show=True)
+
+chess_finder = []
+
 calibrator = StereoCalibrator(rows, cols, sq_sz, img_sz)
+
+for device in devices:
+    #TODO: write grabbed fxn
+    while device.grabbed():
+        i = 0
+        # does this while all cameras are running
+        while i < num_img:
+            # capture images here
+            tricam.get_frames_singleimage()
+            i += 1
+            print(i + 1, "/", num_img, " complete")
+
 
 for i in range(num_img):
     # match the chessboards for the pairs (1,2), (1, 3)
     # save the calibration to a file or smth
+    reader.get_chessboard(cols, rows, show=True)
+    chess_finder.append(i)
     print(i + 1, "/", num_img, " complete")
+
+np.ndarray(chess_finder)
 calib = StereoCalibration(chess_finder, calibration)
+calibrator.check_calibration(calib)
+
+calib.export("calibration")
 # rectify
 # display rectification
 

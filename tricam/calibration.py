@@ -267,14 +267,14 @@ class StereoCalibrator(object):
         cerberus.f_mat = cv2.findFundamentalMat(self.image_points["left"], self.image_points["right"])
 
         for cam in ("left", "center", "right"):
-                (cerberus.undistortion_map[cam],
-                 cerberus.rectification_map[cam]) = cv2.initUndistortRectifyMap(
-                    cerberus.cam_mats[cam],
-                    cerberus.dist_coefs[cam],
-                    cerberus.rect_trans[cam],
-                    cerberus.proj_mats[cam],
-                    self.image_size,
-                    cv2.CV_32FC1)
+            (cerberus.undistortion_map[cam],
+             cerberus.rectification_map[cam]) = cv2.initUndistortRectifyMap(
+             cerberus.cam_mats[cam],
+             cerberus.dist_coefs[cam],
+             cerberus.rect_trans[cam],
+             cerberus.proj_mats[cam],
+             self.image_size,
+             cv2.CV_32FC1)
         return cerberus
 
     def check_calibration(self, calibration):
