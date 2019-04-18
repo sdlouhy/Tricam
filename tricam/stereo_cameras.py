@@ -55,7 +55,11 @@ class StereoGroup(object):
 
     def get_frames(self):
         """Get current frames from cameras."""
-        return [capture.read() for capture in self.captures]
+        cams = []
+        for capture in self.captures:
+            (some_shit, temp) = capture.read()
+            cams.append(temp)
+        return cams
 
     def get_frames_singleimage(self):
         """

@@ -11,9 +11,9 @@ import numpy as np
 devices = (1, 2, 3)
 tricam = StereoGroup(devices)
 # this is for just displaying cameras
-tricam.show_videos()
+# tricam.show_videos()
 
-"""# calibrator test section
+# calibrator test section
 num_img = int(input("enter number of images: "))
 calibration = None
 cols = 9
@@ -56,4 +56,4 @@ calib.export("calibration")
 # display rectification
 
 # point cloud test
-# convert images to 3d using previously found values from rectification"""
+# convert images to 3d using previously found values from rectification
