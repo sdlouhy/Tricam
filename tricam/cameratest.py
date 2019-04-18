@@ -2,10 +2,12 @@
 #       this should be whatever file.
 
 from tricam.stereo_cameras import StereoGroup as StereoGroup
-from tricam.stereo_cameras import ChessboardFinder as ChessboardFinder
 from tricam.calibration import StereoCalibration as StereoCalibration
 from tricam.calibration import StereoCalibrator as StereoCalibrator
 import numpy as np
+import cv2
+import os
+from progressbar import ProgressBar, Bar, Percentage
 
 
 devices = (1, 2, 3)
@@ -23,29 +25,27 @@ sq_sz = 2.5
 # size of calibrated image in pixels, 640 * 480
 img_sz = 307200
 
-reader = ChessboardFinder(tricam)
-
 chess_finder = []
 
 calibrator = StereoCalibrator(rows, cols, sq_sz, img_sz)
 
+progress = ProgressBar(maxval=num_img,
+                       widgets=[Bar("=", "[", "]"), " ", Percentage()])
+
 tricam.show_videos()
 for device in devices:
-    i = 0
     # does this while all cameras are running
-    while i < num_img:
-        # capture images here
-        tricam.get_frames_singleimage()
-        i += 1
-        print(i + 1, "/", num_img, " complete")
-
-
-for i in range(num_img):
-    # match the chessboards for the pairs (1,2), (1, 3)
-    # save the calibration to a file or smth
-    reader.get_chessboard(cols, rows, show=True)
-    chess_finder.append(i)
-    print(i + 1, "/", num_img, " complete")
+    for i in range(num_img):
+        frames = tricam.get_chessboard(cols, rows, True)
+        for side, frame in zip(("left", "center", "right"), frames):
+            number_string = str(i + 1).zfill(len(str(num_img)))
+            filename = "{}_{}.ppm".format(side, number_string)
+            chess_finder.append()
+            cv2.imwrite(chess_finder, frame)
+        progress.update(progress.max_value - (num_img - i))
+        for j in range(10):
+            tricam.show_frames(1)
+    progress.finish()
 
 np.ndarray(chess_finder)
 calib = StereoCalibration(chess_finder, calibration)

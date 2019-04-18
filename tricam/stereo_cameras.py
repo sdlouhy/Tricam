@@ -57,6 +57,7 @@ class StereoGroup(object):
         """Get current frames from cameras."""
         cams = []
         for capture in self.captures:
+            # some_shit is there to fix some casting bullshit
             (some_shit, temp) = capture.read()
             cams.append(temp)
         return cams
