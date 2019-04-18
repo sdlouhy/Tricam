@@ -11,9 +11,9 @@ import numpy as np
 devices = (1, 2, 3)
 tricam = StereoGroup(devices)
 # this is for just displaying cameras
-# tricam.show_videos()
+tricam.show_videos()
 
-# calibrator test section
+"""# calibrator test section
 num_img = int(input("enter number of images: "))
 calibration = None
 cols = 9
@@ -29,16 +29,15 @@ chess_finder = []
 
 calibrator = StereoCalibrator(rows, cols, sq_sz, img_sz)
 
+tricam.show_videos()
 for device in devices:
-    #TODO: write grabbed fxn
-    while device.grabbed():
-        i = 0
-        # does this while all cameras are running
-        while i < num_img:
-            # capture images here
-            tricam.get_frames_singleimage()
-            i += 1
-            print(i + 1, "/", num_img, " complete")
+    i = 0
+    # does this while all cameras are running
+    while i < num_img:
+        # capture images here
+        tricam.get_frames_singleimage()
+        i += 1
+        print(i + 1, "/", num_img, " complete")
 
 
 for i in range(num_img):
@@ -57,4 +56,4 @@ calib.export("calibration")
 # display rectification
 
 # point cloud test
-# convert images to 3d using previously found values from rectification
+# convert images to 3d using previously found values from rectification"""
