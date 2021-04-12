@@ -26,7 +26,7 @@ def main():
                                         "camera calibration.",
                                         parents=[CHESSBOARD_ARGUMENTS])
     parser.add_argument("input_folder", help="Input folder assumed to contain "
-                        "only stereo images taken with the stereo camera pair "
+                        "only stereo images taken with the stereo camera pairs "
                         "that should be calibrated.")
     parser.add_argument("output_folder", help="Folder to write calibration "
                         "files to.", default="/tmp/")
