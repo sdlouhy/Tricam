@@ -19,7 +19,6 @@ from tricam.exceptions import ChessboardNotFoundError
 
 
 class StereoCalibration(object):
-
     """
     A stereo camera calibration.
     The ``StereoCalibration`` stores the calibration for a stereo pair. It can
@@ -123,12 +122,13 @@ class StereoCalibration(object):
 
 
 class StereoCalibrator(object):
-
     """A class that calibrates stereo cameras by finding chessboard corners."""
 
     def _get_corners(self, image):
         """Find subpixel chessboard corners in image."""
-        temp = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+        if image.size != 0:
+            temp = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         ret, corners = cv2.findChessboardCorners(temp,
                                                  (self.rows, self.columns))
         if not ret:
@@ -180,7 +180,7 @@ class StereoCalibrator(object):
 
     def add_corners(self, image_group, show_results=False):
         """
-        Record chessboard corners found in an image pair.
+        Record chessboard corners found in each image of the three cameras.
         The image pair should be an iterable composed of three CvMats ordered
         (left, center, right).
         """
@@ -269,12 +269,12 @@ class StereoCalibrator(object):
         for cam in ("left", "center", "right"):
             (cerberus.undistortion_map[cam],
              cerberus.rectification_map[cam]) = cv2.initUndistortRectifyMap(
-             cerberus.cam_mats[cam],
-             cerberus.dist_coefs[cam],
-             cerberus.rect_trans[cam],
-             cerberus.proj_mats[cam],
-             self.image_size,
-             cv2.CV_32FC1)
+                cerberus.cam_mats[cam],
+                cerberus.dist_coefs[cam],
+                cerberus.rect_trans[cam],
+                cerberus.proj_mats[cam],
+                self.image_size,
+                cv2.CV_32FC1)
         return cerberus
 
     def check_calibration(self, calibration):

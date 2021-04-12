@@ -89,12 +89,12 @@ def calibrate_folder(args):
     print("Reading input files...")
     progress.start()
     while args.input_files:
-        left, right = args.input_files[:2]
-        img_left, im_right = cv2.imread(left), cv2.imread(right)
-        calibrator.add_corners((img_left, im_right),
+        left, center, right = args.input_files[:3]
+        img_left, img_center, img_right = cv2.imread(left), cv2.imread(center), cv2.imread(right)
+        calibrator.add_corners((img_left, img_center, img_right),
                                show_results=args.show_chessboards)
-        args.input_files = args.input_files[2:]
-        progress.update(progress.max_value - len(args.input_files))
+        args.input_files = args.input_files[3:]
+        progress.update(progress.maxval - len(args.input_files))
 
     progress.finish()
     print("Calibrating cameras. This can take a while.")
